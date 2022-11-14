@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import Head from 'next/head';
+
 import { createRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import logoImage from '../../../public/logo-usecret.png';
@@ -34,6 +36,17 @@ export default function Signup() {
       setValues({ ...values, [prop]: event.target.value });
     };
 
+  const handleClickShowPassword = () => {
+    setValues({
+      ...values,
+      showPassword: !values.showPassword,
+    });
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     if (!values.token) return;
@@ -52,19 +65,11 @@ export default function Signup() {
     recaptchaRef.current?.execute();
   }
 
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
-
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   return (
-    <div className="flex flex-auto justify-between h-screen w-screen">
+    <div className="flex flex-auto justify-between h-screen w-screen border-2 border-neutral-100">
+      <Head>
+        <title>Sign Up for uSecret</title>
+      </Head>
 
       <Box
         onSubmit={handleSubmit}
