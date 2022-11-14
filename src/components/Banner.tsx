@@ -1,6 +1,3 @@
-// import Image from 'next/image'
-// import signUpPic from '../assets/signup-pic.jpg'
-
 type BannerProps = {
   title?: string;
   urlImage?: string;
