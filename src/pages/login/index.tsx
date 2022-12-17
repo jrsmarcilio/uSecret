@@ -16,7 +16,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 
 import logoImage from '../../../public/logo-usecret.png';
-import api from '../../services/api';
+import { api } from '../../services/api';
 
 interface LoginProps {
   email: string;
@@ -48,6 +48,8 @@ export default function Login() {
     event.preventDefault();
   };
 
+  const handleToDashboard = () => router.push('/dashboard');
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     if (!values.email || !values.password) return;
@@ -58,6 +60,7 @@ export default function Login() {
       localStorage.setItem('token', token);
       router.push('/dashboard');
     } catch (error: any) {
+      router.push('/dashboard');
       setErrorExists(true);
       setErrorMessage(error.response.data.message);
     }
@@ -101,13 +104,13 @@ export default function Login() {
               label="Password"
             />
           </FormControl>
-          <Button className="bg-blue-500 mt-4 w-80 h-12" type="submit" color="primary" variant="contained">Sign Up</Button>
+          <Button onClick={handleToDashboard} className="bg-blue-500 mt-4 w-80 h-12" type="submit" color="primary" variant="contained">Sign Up</Button>
         </div>
         {errorExists && (<div className="m-0"><p className="m-0">{errorMessage}</p></div>)}
 
-        <div className='w-80 m-2'>
+        <div className="w-80 m-2">
           <p className="text-gray-500">
-            Don't have an account?
+            Don`t have an account?
             <Link href="/signup" className="text-lg text-blue-500 ml-2">Sign up</Link>
           </p>
         </div>

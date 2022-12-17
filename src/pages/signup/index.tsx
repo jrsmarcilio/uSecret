@@ -17,6 +17,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
+import api from '../api/cup'
 
 interface SignUpProps {
   email: string;
@@ -50,7 +51,14 @@ export default function Signup() {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     if (!values.token) return;
-    console.log("🚀 ~ file: index.tsx ~ line 45 ~ event", event)
+    const data = {
+      name: "Marcilio",
+      email: values.email,
+      password: values.password,
+      passwordConfirm: values.password,
+      
+    }
+    fetch('/api/cup', { method: 'POST', body: JSON.stringify(data) }).then((res) => res.json()).then((data) => console.log(data));
   }
 
   const handleNextStep = () => {

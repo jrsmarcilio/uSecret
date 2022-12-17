@@ -1,65 +1,68 @@
-import { useState } from 'react';
-import Table from 'rc-table';
-import Pagination from "react-js-pagination";
+import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+
+import { CategoriesProps } from '../../pages/api/category';
+import Loading from '../Loading';
 
 export default function CategoryTable() {
-  const columns = [
+  const [rows, setRows] = useState<CategoriesProps[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 90 },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: 400,
-      className: "text-white bg-gray-800 p-2 border-r-2 border-b-2",
-      rowClassName: "bg-black-ripon"
+      field: 'firstName',
+      headerName: 'First name',
+      width: 150,
+      editable: true,
     },
     {
-      title: 'Total Subcategory',
-      dataIndex: 'subCount',
-      key: 'subCount',
-      width: 400,
-      className: "text-white bg-gray-600 p-2 border-r-2 border-b-2"
+      field: 'lastName',
+      headerName: 'Last name',
+      width: 150,
+      editable: true,
     },
     {
-      title: 'Total Product',
-      dataIndex: 'productCount',
-      key: 'productCount',
-      width: 400,
-      className: "text-white bg-gray-800 p-2 border-r-2 border-b-2"
+      field: 'age',
+      headerName: 'Age',
+      type: 'number',
+      width: 110,
+      editable: true,
     },
     {
-      title: 'Operations',
-      dataIndex: '',
-      key: 'operations',
-      className: "text-white bg-gray-600 p-2 border-b-2",
-      render: () => <><a href="#">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></>,
+      field: 'fullName',
+      headerName: 'Full name',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 160,
+      valueGetter: (params: GridValueGetterParams) =>
+        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
   ];
 
-  const data = [
-    { id: '01', name: 'Jack', subCount: 28, productCount: 'some where' },
-    { id: '02', name: 'Rose', subCount: 36, productCount: 'some where' },
-  ];
-
-  const [activePage, setActivePage] = useState(15);
-  const handlePageChange = (pageNumber: number) => setActivePage(pageNumber);
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/category')
+      .then((res) => res.json())
+      .then((data) => setRows(data));
+    setLoading(false);
+  }, []);
 
   return (
-    <>
-      <Table columns={columns} data={data} rowKey="id" className='bg-purple-700 p-4 w-full text-center rc-table-custom font-semibold ' />
-      <Pagination
-        activePage={activePage}
-        itemsCountPerPage={10}
-        totalItemsCount={450}
-        pageRangeDisplayed={5}
-        onChange={handlePageChange}
-        nextPageText={'Next'}
-        prevPageText={'Prev'}
-        firstPageText={'First'}
-        lastPageText={'Last'}
-        innerClass="js-ul"
-        itemClass='js-li'
-        linkClass='page-link'
-      />
-    </>
+    <Box className="h-auto w-full">
+      {loading ? (<Loading />) : (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          autoHeight
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+          disableSelectionOnClick
+          experimentalFeatures={{ newEditingApi: true }}
+        />
+      )}
+    </Box>
   );
 }
