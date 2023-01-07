@@ -23,11 +23,13 @@ interface SignUpProps {
   token: string;
   password: string;
   showPassword: boolean;
+  emailInvalid: boolean;
+  tokenInvalid: boolean;
 }
 
 export default function Signup() {
   const recaptchaRef = createRef<ReCAPTCHA>();
-  const defaultValues: SignUpProps = { email: '', token: '', password: '', showPassword: false };
+  const defaultValues: SignUpProps = { email: '', token: '', password: '', showPassword: false, emailInvalid: false, tokenInvalid: false };
   const [values, setValues] = useState<SignUpProps>(defaultValues);
   const [stepForm, setStepForm] = useState(1);
 
@@ -54,7 +56,6 @@ export default function Signup() {
   }
 
   const handleNextStep = () => {
-    console.log(values)
     if (!values.token || !values.email) return;
     setStepForm(2);
   }
@@ -66,91 +67,102 @@ export default function Signup() {
   }
 
   return (
-    <div className="flex flex-auto justify-between h-screen w-screen border-2 border-neutral-100">
+
+    <div className="flex justify-center items-center w-screen h-screen">
       <Head>
         <title>Sign Up for uSecret</title>
       </Head>
 
-      <Box
-        onSubmit={handleSubmit}
-        className="container flex justify-center items-center h-screen w-screen"
-        component="form"
-        sx={{
-          '& > :not(style)': { m: 1 },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <div className="w-128  h-auto flex flex-col justify-center items-center p-12 shadow-lg shadow-blue-500/50">
+      <main className="w-1/2 h-screen flex flex-col justify-center items-center p-12">
 
-          <div className="flex flex-row justify-center items-center w-full">
-            <Image className="h-12 w-auto" src={logoImage} alt="uSecret brand"></Image>
-            <h1 className="text-2xl font-bold text-gray-800 m-4">uSecret</h1>
-          </div>
+        <Box
+          onSubmit={handleSubmit}
+          className="container flex justify-center items-center h-screen w-screen"
+          component="form"
+          sx={{ '& > :not(style)': { m: 1 } }}
+          noValidate
+          autoComplete="off"
+        >
+          <div className="w-128  h-auto flex flex-col justify-center items-center p-12 shadow-lg shadow-blue-500/50">
 
-          <div className="flex flex-col justify-center items-center w-full">
-            <h2 className="text-2xl font-bold text-gray-800">Create Your Account</h2>
-            <p className="text-gray-500">Sign up for uSecret to continue</p>
-          </div>
+            <div className="flex flex-row justify-center items-center w-full">
+              <Image className="h-12 w-auto" src={logoImage} alt="uSecret brand"></Image>
+              <h1 className="text-2xl font-bold text-gray-800 m-4">uSecret</h1>
+            </div>
 
-          <div className="flex flex-col justify-center items-center w-full m-8">
+            <div className="flex flex-col justify-center items-center w-full">
+              <h2 className="text-2xl font-bold text-gray-800">Create Your Account</h2>
+              <p className="text-gray-500">Sign up for uSecret to continue</p>
+            </div>
 
-            {stepForm === 1 && (
-              <>
-                <TextField className="w-80" onChange={handleChange('email')} label="Email" variant="outlined" />
-                <ReCAPTCHA
-                  className="flex justify-center w-80 m-4"
-                  ref={recaptchaRef}
-                  size="normal"
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                  onChange={reCAPTCHAChange}
-                />
-                <Button className="bg-blue-500 mt-4 w-80 h-12" color="primary" variant="contained" onClick={handleNextStep}>Continue</Button>
-              </>
-            )}
+            <div className="flex flex-col justify-center items-center w-full m-8">
 
-            {stepForm === 2 && (
-              <>
-                <TextField className="w-80" defaultValue={values.email} onChange={handleChange('email')} label="Email" variant="outlined" />
-                <FormControl className="w-80" sx={{ m: 2 }} variant="outlined">
-                  <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                  <OutlinedInput
-                    type={values.showPassword ? 'text' : 'password'}
-                    value={values.password}
-                    onChange={handleChange('password')}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Password"
+              {stepForm === 1 && (
+                <>
+                  <TextField className="w-80" onChange={handleChange('email')} label="Email" variant="outlined" />
+                  
+                  {values.emailInvalid && (
+                    <p className="text-red-500 text-sm mt-1">Please enter a valid email address</p>
+                  )}
+
+                  <ReCAPTCHA
+                    className="flex justify-center w-80 m-4"
+                    ref={recaptchaRef}
+                    size="normal"
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                    onChange={reCAPTCHAChange}
                   />
-                </FormControl>
-                <Button className="bg-blue-500 mt-4 w-80 h-12" type="submit" color="primary" variant="contained">Sign Up</Button>
-              </>
-            )}
 
-            <div className='w-80 m-2'>
-              <p className="text-gray-500">
-                Already have an account?
-                <Link href="/login" className="text-lg text-blue-500 ml-2">Log in</Link>
-              </p>
+                  {values.tokenInvalid && (
+                    <p className="text-red-500 text-sm">Please verify that you are not a robot</p>
+                  )}
+
+                  <Button className="bg-blue-500 mt-4 w-80 h-12" color="primary" variant="contained" onClick={handleNextStep}>Continue</Button>
+                </>
+              )}
+
+              {stepForm === 2 && (
+                <>
+                  <TextField className="w-80" defaultValue={values.email} onChange={handleChange('email')} label="Email" variant="outlined" />
+                  <FormControl className="w-80" sx={{ m: 2 }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                    <OutlinedInput
+                      type={values.showPassword ? 'text' : 'password'}
+                      value={values.password}
+                      onChange={handleChange('password')}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                    />
+                  </FormControl>
+                  <Button className="bg-blue-500 mt-4 w-80 h-12" type="submit" color="primary" variant="contained">Sign Up</Button>
+                </>
+              )}
+
+              <div className='w-80 m-2'>
+                <p className="text-gray-500">
+                  Already have an account?
+                  <Link href="/signin" className="text-lg text-blue-500 ml-2">Log in</Link>
+                </p>
+              </div>
+
             </div>
 
           </div>
-
-        </div>
-      </Box>
+        </Box>
+      </main>
 
       <Banner />
     </div>
   );
 }
-

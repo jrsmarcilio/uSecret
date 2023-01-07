@@ -1,26 +1,19 @@
-// import Image from 'next/image'
-// import signUpPic from '../assets/signup-pic.jpg'
+import { useState, useEffect } from "react";
+import axios from 'axios';
+import { ImageRoot } from "@/interfaces/unsplash.interface";
 
-type BannerProps = {
-  title?: string;
-  urlImage?: string;
-  gradient?: string;
-}
+export default function Banner() {
+  const [background, setBackground] = useState<ImageRoot>();
 
-export default function Banner({ gradient, title, urlImage }: BannerProps) {
+  useEffect(() => {
+    const fetchBackground = async () => {
+      const background = await axios.get('/api/unsplash');
+      setBackground(background.data);
+    };
+    if (!background) fetchBackground();
+  });
+
   return (
-    <div className="h-screen w-screen">
-      <div className="
-        w-full
-        h-full
-        bg-gradient-to-b from-indigo-500 via-transparent to-indigo-900
-        opacity-25
-        z-10
-        bg-[url('/jason-dent-3wPJxh-piRw-unsplash.jpg')]
-        bg-cover
-        bg-center
-        bg-no-repeat
-      "></div>
-    </div>
+    <div className="hidden lg:block w-1/2 h-screen bg-cover bg-center" style={{ backgroundImage: `url(${background?.urls.full})` }}></div>
   );
 }

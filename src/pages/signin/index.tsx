@@ -18,6 +18,7 @@ import TextField from '@mui/material/TextField';
 
 import logoImage from '../../../public/logo-usecret.png';
 import { ImageRoot } from '@/interfaces/unsplash.interface';
+import Banner from '@/components/Banner';
 
 interface LoginProps {
   email: string;
@@ -94,7 +95,7 @@ export default function Login() {
         <title>Login for uSecret</title>
       </Head>
 
-      <div className="hidden lg:block w-1/2 h-screen bg-cover bg-center" style={{ backgroundImage: `url(${background?.urls.full})` }}></div>
+      <Banner />
 
       <main className="w-1/2 h-screen flex flex-col justify-center items-center p-12">
 
