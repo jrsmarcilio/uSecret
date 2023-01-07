@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import Head from 'next/head';
 import Image from 'next/image';
@@ -16,11 +17,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 
 import logoImage from '../../../public/logo-usecret.png';
-import api from '../../services/api';
-
 import { ImageRoot } from '@/interfaces/unsplash.interface';
-import { useEffect } from 'react';
-import axios from 'axios';
 
 interface LoginProps {
   email: string;
@@ -76,10 +73,8 @@ export default function Login() {
       body: JSON.stringify({ email: values.email, password: values.password }),
       headers: { 'Content-Type': 'application/json' },
     });
-    console.log("🚀 ~ file: index.tsx:77 ~ response", response)
     
     const data = await response.json();
-    console.log("🚀 ~ file: index.tsx:80 ~ data", data)
 
     if (data.message) {
       setErrorExists(true);
@@ -99,19 +94,7 @@ export default function Login() {
         <title>Login for uSecret</title>
       </Head>
 
-      <div className="w-1/2 h-screen bg-blue-500">
-        <div className="flex flex-col justify-center items-center h-full">
-          {background && (
-            <Image
-              className="object-cover w-full h-full"
-              src={background.urls.full}
-              alt={background.alt_description}
-              width={background.width}
-              height={background.height}
-            />
-          )}
-        </div>
-      </div>
+      <div className="hidden lg:block w-1/2 h-screen bg-cover bg-center" style={{ backgroundImage: `url(${background?.urls.full})` }}></div>
 
       <main className="w-1/2 h-screen flex flex-col justify-center items-center p-12">
 
