@@ -135,7 +135,7 @@ export default function Login() {
 
           <div className='w-80 m-2'>
             <p className="text-gray-500">
-              Don't have an account?
+              {String("Don't have an account ?")}
               <Link href="/signup" className="text-lg text-blue-500 ml-2">Sign up</Link>
             </p>
           </div>

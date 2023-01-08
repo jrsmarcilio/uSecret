@@ -33,7 +33,7 @@ export default function Dashboard() {
           <CardAvatar icon="GroupIcon" counter={25} title="Groups" color="yellow" />
           <CardAvatar icon="Clock" counter={2.2} title="Average usage time per user" color="teal" />
 
-          <ListSecret />
+          <ListSecret size='sm' title='' />
 
           <CardSecretExpire title='Users by type groups' size='sm' />
         </section>
