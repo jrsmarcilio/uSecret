@@ -1,6 +1,6 @@
 export default function SettingButton() {
 	return (
-		<div className="inline-flex items-center justify-center h-20 w-20 border-t border-gray-700">
+		<div className="inline-flex items-center justify-center h-20 w-full border-t border-gray-700">
 			<button className="p-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg">
 				<span className="sr-only">Settings</span>
 				<svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">

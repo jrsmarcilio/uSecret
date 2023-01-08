@@ -54,7 +54,7 @@ export default function Nav({ sidebarOutsideClick }: NavProps) {
           }
         </div>
 
-        <NavItem hrefLink='/categories' sidebarStatus={sidebarStatus} menuTitle="Categories" subMenu={false}>
+        <NavItem hrefLink='/vault' sidebarStatus={sidebarStatus} menuTitle="Cofre" subMenu={false}>
           <ArticleIcon className="h-10" />
         </NavItem>
 
