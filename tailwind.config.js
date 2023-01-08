@@ -34,5 +34,4 @@ const tailwindConfig = {
   plugins: [],
 }
 
-
 module.exports = tailwindConfig

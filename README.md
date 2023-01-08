@@ -1,5 +1,13 @@
 # uSecret
 
+## Links utils
+[Prototipo do Figma](https://www.figma.com/file/SSFWjg9d4X3vpASE57w02G/Sign-Up-Page-Design-(Community)?node-id=1%3A54/58)
+[Tailwind Docs](https://tailwindcss.com/docs)
+[Next Docs](https://nextjs.org/docs)
+[Mui Docs](https://mui.com/material-ui/)
+[Vault Docs](https://developer.hashicorp.com/vault/docs)
+
+
 ## Getting Started
 
 First, run the development server:
