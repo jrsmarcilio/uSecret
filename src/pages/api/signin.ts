@@ -2,12 +2,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 } from 'uuid';
 
-type SignIn = {
+type login = {
   email: string;
   password: string;
 }
 
-const users: SignIn = {
+const users: login = {
   email: "jrsmarcilio@usecret.com",
   password: "123456"
 }

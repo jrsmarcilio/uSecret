@@ -1,24 +1,30 @@
-import * as React from 'react';
-import Head from 'next/head';
-import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
+import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Head from 'next/head';
+import * as React from 'react';
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
-import '../styles/globals.css';
-import lightThemeOptions from '../styles/theme/lightThemeOptions';
-import createEmotionCache from '../utils/createEmotionCache';
+import { StoreContextProvider } from '@/context/store';
+import '@/styles/globals.css';
+import lightThemeOptions from '@/styles/theme/lightThemeOptions';
+import createEmotionCache from '@/utils/createEmotionCache';
 
 const clientSideEmotionCache = createEmotionCache();
 const lightTheme = createTheme(lightThemeOptions);
 
+import { AuthProvider } from '@/context/auth';
 import type { AppProps } from 'next/app';
+import { ProfileProvider } from '@/context/profile';
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
 const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
+
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   return (
@@ -36,12 +42,21 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
             nonce: undefined,
           }}
         >
-          <CssBaseline />
-          <Component {...pageProps} />
+
+          <AuthProvider>
+            <ProfileProvider>
+              <StoreContextProvider>
+                <CssBaseline />
+                <ToastContainer />
+                <Component {...pageProps} />
+              </StoreContextProvider>
+            </ProfileProvider>
+          </AuthProvider>
         </GoogleReCaptchaProvider>
       </ThemeProvider>
     </CacheProvider>
   );
 }
+
 
 export default MyApp;

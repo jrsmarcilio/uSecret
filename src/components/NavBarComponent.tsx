@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import Link from 'next/link'
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function NavBarComponent() {
   const router = useRouter();
@@ -18,7 +20,7 @@ export default function NavBarComponent() {
   return (
     <nav className="flex items-center justify-between flex-wrap bg-blue-700 p-6">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
-        <img className="fill-current h-8 w-8 mr-2" width="54" height="54" src="logo-usecret.png" alt="uSecret Logo" />
+        <Image className="fill-current h-8 w-8 mr-2" width="54" height="54" src="logo-usecret.png" alt="uSecret Logo" />
         <span className="font-semibold text-xl tracking-tight">
           uSecret
         </span>
@@ -35,17 +37,17 @@ export default function NavBarComponent() {
 
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
-          <a href="#responsive-header" className={`mr-4 ${handleStyle('/home')}`}>Home</a>
-          <a href="/vault" className={`mr-4 ${handleStyle('/vault')}`}>Vault</a>
-          <a href="#responsive-header" className={`${handleStyle('/tools')}`}>Tools</a>
+          <Link href="#responsive-header" className={`mr-4 ${handleStyle('/home')}`}>Home</Link>
+          <Link href="/vault" className={`mr-4 ${handleStyle('/vault')}`}>Vault</Link>
+          <Link href="#responsive-header" className={`${handleStyle('/tools')}`}>Tools</Link>
         </div>
         <div>
-          <a
+          <Link
             href="#"
             className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-800 hover:bg-white mt-4 lg:mt-0"
           >
             Download
-          </a>
+          </Link>
         </div>
       </div>
     </nav>

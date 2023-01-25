@@ -1,4 +1,5 @@
-import { useState } from "react";
+import Image from 'next/image';
+import { useEffect, useState } from "react";
 
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -6,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useAuth } from '@/context/auth';
 
 export default function UserMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -13,6 +15,13 @@ export default function UserMenu() {
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  const { user, isAuthenticated, logout: handleLogout } = useAuth();
+
+  useEffect(() => {
+    isAuthenticated();
+  }, [isAuthenticated]);
+
 
   return (
     <div>
@@ -24,14 +33,16 @@ export default function UserMenu() {
         onClick={handleClick}
       >
         <div className="hidden md:flex md:flex-col md:items-end md:leading-tight">
-          <span className="font-semibold">Daenerys Targaryen</span>
-          <span className="text-sm text-gray-600">Suport</span>
+          <span className="font-semibold">{user?.name}</span>
+          <span className="text-sm text-gray-600">{user?.profile}</span>
         </div>
         <span className="h-12 w-12 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden">
-          <img
-            src="https://randomuser.me/api/portraits/women/68.jpg"
-            alt="user profile photo"
+          <Image
+            src={user?.avatar || '/static/images/avatar/1.jpg'}
+            alt={`Avatar of ${user?.name ? user?.name : 'User'}`}
             className="h-full w-full object-cover"
+            width={48}
+            height={48}
           />
         </span>
         {open ?
@@ -51,7 +62,7 @@ export default function UserMenu() {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
   );

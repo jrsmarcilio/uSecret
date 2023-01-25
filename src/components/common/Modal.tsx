@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from "react";
+import Image from 'next/image';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import React, { useEffect, useState } from "react";
 
 interface ModalProps {
   modal: boolean;
@@ -57,7 +58,7 @@ export default function BasicModal({ modal, setModal }: ModalProps) {
             </Button>
             <div className="flex overflow-auto my-2 p-2">
               {
-                selectedImage && [...selectedImage].map((file, index) => <img key={index} src={URL.createObjectURL(file)} className="w-32 h-32 mr-1 rounded-sm border-4" />)
+                selectedImage && [...selectedImage].map((file, index) => <Image key={index} src={URL.createObjectURL(file)} className="w-32 h-32 mr-1 rounded-sm border-4" alt={`description-${index}`} />)
               }
             </div>
             {selectedImage &&
