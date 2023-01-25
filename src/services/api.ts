@@ -1,15 +1,17 @@
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
+import Cookies from 'js-cookie';
 import getConfig from 'next/config';
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 const api = axios.create({
-  baseURL: "http://localhost:3333/",
+  baseURL: "http://localhost:3334/api",
   timeout: 1000,
-  headers: { "Content-Type": "application/json" }
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${Cookies.get('SESSION_TOKEN')}`
+  },
 });
-
-console.log('api params', process.env.UNSPLASH_ACCESS_KEY);
 
 const apiUnsplash = axios.create({
   baseURL: "https://api.unsplash.com/",
@@ -19,7 +21,5 @@ const apiUnsplash = axios.create({
     client_id: serverRuntimeConfig.UNSPLASH_ACCESS_KEY
   }
 });
-
-console.log('apiUnsplash params', apiUnsplash.defaults.params);
 
 export { api, apiUnsplash };

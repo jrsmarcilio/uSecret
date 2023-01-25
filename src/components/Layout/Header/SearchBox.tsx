@@ -5,10 +5,15 @@ import { styled } from '@mui/material/styles';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.common.white,
+  '&:hover': {
+    backgroundColor: theme.palette.common.white,
+  },
+  marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(3),
     width: 'auto',
   },
 }));
@@ -30,22 +35,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '18ch',
-      '&:focus': {
-        width: '32ch',
-      },
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
     },
   },
 }));
 
-export default function SearchBox() {
+interface SearchBoxProps {
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default function SearchBox({ handleChange }: SearchBoxProps) {
+
+  const handleFocusSearch = () => {
+    const searchInput = document.querySelector('input');
+    searchInput?.focus();
+  }
+
   return (
-    <Search className='text-gray-500 bg-gray-800 hover:bg-gray-400'>
+    <Search onClick={handleFocusSearch} className="hover:cursor-text">
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <StyledInputBase placeholder="Search secret…" inputProps={{ 'aria-label': 'search' }} />
+      <StyledInputBase onChange={handleChange} placeholder="Search secret…" />
     </Search>
   );
 }

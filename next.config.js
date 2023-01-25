@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com', 'randomuser.me'],
+    domains: ['images.unsplash.com', 'via.placeholder.com', 'localhost', 'lh3.googleusercontent.com'],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },

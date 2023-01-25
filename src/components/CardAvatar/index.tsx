@@ -7,13 +7,14 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import WestIcon from '@mui/icons-material/West';
 import ArticleIcon from '@mui/icons-material/Article';
 import PersonIcon from '@mui/icons-material/Person';
+import VerifiedUser from '@mui/icons-material/VerifiedUser';
 
 export interface CardAvatarProps {
-  icon: 'GroupIcon' | 'EastIcon' | 'KeyIcon' | 'PolicyIcon' | 'WestIcon' | 'ArticleIcon' | 'PersonIcon' | 'HighLine' | 'LowLine' | 'Clock';
+  icon: 'GroupIcon' | 'EastIcon' | 'KeyIcon' | 'PolicyIcon' | 'WestIcon' | 'ArticleIcon' | 'PersonIcon' | 'HighLine' | 'LowLine' | 'Clock' | 'VerifiedUser';
   title: string;
   subtitle?: string;
   counter: number;
-  color: 'purple' | 'blue' | 'green' | 'yellow' | 'red' | 'teal' | 'yellow';
+  color: 'purple' | 'blue' | 'green' | 'yellow' | 'red' | 'teal' | 'yellow' | 'gray';
 }
 
 export default function CardAvatar({ icon, counter, title, subtitle, color }: CardAvatarProps) {
@@ -26,6 +27,7 @@ export default function CardAvatar({ icon, counter, title, subtitle, color }: Ca
     WestIcon,
     ArticleIcon,
     PersonIcon,
+    VerifiedUser,
     HighLine: () => <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>,
     LowLine: () => <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">

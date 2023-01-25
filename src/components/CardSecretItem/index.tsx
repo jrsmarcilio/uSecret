@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useState, Fragment } from 'react';
 
+import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,17 +12,22 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import KeyIcon from '@mui/icons-material/Key';
+import { toast } from 'react-toastify';
 
-interface CardSecretItemProps {
-  value: number;
-  label: string;
-  subLabel: string;
-  avatar?: { src: string; alt: string};
-}
+import useCopyToClipboard from '@/usehooks-ts/useCopyToClipboard';
+import { Account } from '@/interfaces/root.interface';
+import { api } from '@/services/api';
+import { TypeOptions } from 'react-toastify';
+import SecretService from '@/services/secret.service';
+import { useProfile } from '@/context/profile';
 
-export default function CardSecretItem({ avatar, label, subLabel, value }: CardSecretItemProps) {
-  const [checked, setChecked] = useState([1]);
+export default function CardSecretItem(account: Account) {
+  const { password, username, id, type: credential, deleted } = account;
+  const notify = (message: string, type: TypeOptions) => toast(message, { type });
+  const { rootProfile, setRootProfile } = useProfile();
 
+  const [_, setTextCopy] = useCopyToClipboard();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -29,23 +35,38 @@ export default function CardSecretItem({ avatar, label, subLabel, value }: CardS
   const handleClick = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+  const handleExcludeAccount = () => {
+    if (id) {
+      SecretService.deleteAccount(id).then(() => {
+        notify('Secret deleted successfully', 'success');
+      }).catch(({ response }) => {
+        notify('Falha ao excluir a conta!', 'error');
+        response.data.errors.map((err: { param: string, msg: string }) => notify(`${err.param} ${err.msg}`, 'error'));
+      });
     }
+  }
 
-    setChecked(newChecked);
-  };
+  const handleRestoreSecret = () => {
+    if (account.id) {
+      SecretService.updateSecret({ ...account, deleted: false }, account.id).then(() => {
+        notify('Secret restored successfully', 'success');
+        setRootProfile({ ...rootProfile, accounts: rootProfile.accounts.map((acc: Account) => acc.id === account.id ? { ...acc, deleted: false } : acc) });
+      }).catch((error) => {
+        const { response } = error;
+        notify('Falha ao restaurar a conta!', 'error');
+        if (response.data.message) notify(response.data.message, 'error');
+        else {
+          const { response } = error;
+          response.data.errors.map((err: { param: string, msg: string }) => notify(`${err.param} ${err.msg}`, 'error'));
+        }
+      });
+    }
+  }
 
   return (
     <ListItem
       sx={{ width: '100%' }}
-      key={value}
+      key={`list-label-${id}`}
       secondaryAction={
         <Fragment>
           <IconButton
@@ -67,43 +88,28 @@ export default function CardSecretItem({ avatar, label, subLabel, value }: CardS
             anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
             transformOrigin={{ vertical: 'center', horizontal: 'left' }}
           >
-            <MenuItem onClick={handleClose}>Copiar Nome de Usuário</MenuItem>
-            <MenuItem onClick={handleClose}>Copiar Senha</MenuItem>
-            <MenuItem onClick={handleClose}>Abrir</MenuItem>
-            <MenuItem onClick={handleClose}>Anexos</MenuItem>
-            <MenuItem onClick={handleClose}>Clonar</MenuItem>
-            <MenuItem onClick={handleClose}>Excluir</MenuItem>
+            <MenuItem disabled={deleted} onClick={() => setTextCopy(username)}>Copiar Nome de Usuário</MenuItem>
+            <MenuItem disabled={deleted} onClick={() => setTextCopy(password)}>Copiar Senha</MenuItem>
+            <MenuItem disabled onClick={handleClose}>Abrir</MenuItem>
+            <MenuItem disabled onClick={handleClose}>Anexos</MenuItem>
+            <MenuItem disabled onClick={handleClose}>Clonar</MenuItem>
+            <MenuItem disabled={deleted} onClick={handleExcludeAccount}>Excluir</MenuItem>
+            {/* {deleted && <MenuItem onClick={handleRestoreSecret}>Restaurar</MenuItem>} */}
           </Menu>
         </Fragment>
       }
       disablePadding
     >
-      <ListItemButton className='mt-2'>
+      <ListItemAvatar className='ml-8 mt-0'>{deleted ? <DeleteIcon /> : <KeyIcon />}</ListItemAvatar>
 
-        <Checkbox
-          sx={{ color: '#1E90FF', marginLeft: 1, '&.Mui-checked': { color: '#1E90FF' } }}
-          edge="start"
-          checked={checked.indexOf(value) !== -1}
-          tabIndex={-1}
-          disableRipple
-          inputProps={{ 'aria-labelledby': `checkbox-list-secondary-label-${value}` }}
-          onChange={handleToggle(value)}
-        />
-
-        <ListItemAvatar className='ml-8'>
-          <Avatar alt={`Avatar n°${value + 1}`} src={`/static/images/avatar/${value + 1}.jpg`} />
-        </ListItemAvatar>
-
-        <ListItemText id={`checkbox-list-secondary-label-${value}`} primary={
-          <div className="flex flex-col ml-2">
-            <Link href="/profile">
-              <span className="text-gray-900 font-semibold hover:underline hover:text-blue-700">{label}</span>
-            </Link>
-            <span className="text-gray-600">{subLabel}</span>
-          </div>
-        } />
-
-      </ListItemButton>
+      <ListItemText id={`checkbox-list-secondary-label-${id}`} primary={
+        <div className="flex flex-col ml-2">
+          <Link href="/profile">
+            <span className="text-sm font-medium text-slate-900 hover:underline hover:text-blue-700">{username}</span>
+          </Link>
+          <span className="text-sm text-slate-500 truncate">{credential}</span>
+        </div>
+      } />
     </ListItem>
   );
 }

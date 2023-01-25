@@ -5,13 +5,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Alert from "@mui/material/Alert";
 import { AlertColor } from "@mui/material/Alert/Alert";
 import { Fragment } from "react";
+import { ToastProps } from "@/interfaces/toast.interface";
 
-export interface ToastProps {
-  open: boolean;
-  message: string;
-  handleClose: () => void;
-  severity?: AlertColor;
-}
 
 export default function Toast({ handleClose, message, open, severity }: ToastProps) {
 
@@ -26,7 +21,7 @@ export default function Toast({ handleClose, message, open, severity }: ToastPro
 
   return (
     <Fragment>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} message="Note archived" action={ActionElement}>
+      <Snackbar anchorOrigin={{ horizontal: 'right', vertical: 'top' }} open={open} autoHideDuration={6000} onClose={handleClose} message="Note archived" action={ActionElement}>
         <Alert onClose={handleClose} severity={severity ? severity : "success"} sx={{ width: '100%' }}>{message}</Alert>
       </Snackbar>
     </Fragment>

@@ -8,9 +8,10 @@ import Sidebar from "./Sidebar";
 interface LayoutProps {
   children: ReactNode;
   title?: string;
+  styles?: string
 }
 
-export default function Layout({ children, title = "Sample Title" }: LayoutProps) {
+export default function Layout({ children, title = "Sample Title", styles }: LayoutProps) {
   const [mobileNavsidebar, setMobileNavsidebar] = useState<boolean>(false);
 
   return (
@@ -18,7 +19,7 @@ export default function Layout({ children, title = "Sample Title" }: LayoutProps
       <Head>
         <title>{title}</title>
       </Head>
-      <div className="flex bg-gray-100 min-h-screen relative">
+      <div className={`flex bg-gray-100 min-h-screen relative ${styles ? styles : ''}`}>
         <Sidebar mobileNavSidebar={mobileNavsidebar} />
         <div className="flex-grow text-gray-800">
           <Header mobileNavsidebar={mobileNavsidebar} setMobileNavsidebar={setMobileNavsidebar} />
